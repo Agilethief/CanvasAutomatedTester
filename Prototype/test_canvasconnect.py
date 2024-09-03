@@ -26,9 +26,18 @@ def test_canvas_login(playwright: Playwright) -> None:
     page.wait_for_timeout(1000)
 
     expect(page.locator("#dashboard_header_container")).to_contain_text("Dashboard")
-    # page.get_by_role("button", name="Admin").click()
-    # expect(page.locator("#global_nav_accounts_link")).to_contain_text("Admin")
+    print(
+        page.locator("#dashboard_header_container")
+        .locator(".hidden-phone")
+        .text_content()
+    )
 
     # ---------------------
     context.close()
     browser.close()
+
+
+with sync_playwright() as playwright:
+    print("Manual run")
+    load_dotenv()
+    test_canvas_login(playwright)

@@ -2,6 +2,15 @@
 
 ## Main Objects:
 
+### TestCollection
+
+- Test[] : Test
+
+### Test
+
+- Passed : Bool
+- CourseToTest : Course
+
 ### Course - course wide information
 
 - ID : int
@@ -11,6 +20,9 @@
 - Assessment count : int
 - link count : int
 - Image count : int
+- Modules[] : Module
+- Pages []: Page
+- Assessments[] : Assessment
 
 ### Module - Module info
 
@@ -51,3 +63,4 @@ Report - contains the findings of a series of tests
    3. Generate Report based on tests
    4. Save and share report
 5. Increment ID
+6. When ID reaches 1000 - We stop (This is just a rough hack)
