@@ -7,6 +7,10 @@ It will need to be able to run headless and safely handle issues.
 
 It will need to output a report, excel preferable that anyone can view.
 
+## Bonus
+
+It will post the findings in a MS Teams message with a link to the file on SharePoint
+
 ---
 
 ## Tests
