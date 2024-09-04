@@ -1,14 +1,23 @@
 from playwright.async_api import async_playwright
 import asyncio
 import os
-from Playwright_Checks import check_course_is_valid
+from Playwright_Checks import (
+    check_course_is_valid,
+    get_course_data,
+    get_assessment_data,
+)
+import QA_Data
+import time
+import generate_report
 
 
-def start_session(courseID):
-    asyncio.run(start_session_async(courseID))
+def start_session(course: QA_Data.Course):
+    asyncio.run(start_session_async(course))
 
 
-async def start_session_async(courseID):
+async def start_session_async(course: QA_Data.Course):
+    start_time = time.time()
+
     print("browser session starting")
     async with async_playwright() as p:
         # initial setup
@@ -22,7 +31,7 @@ async def start_session_async(courseID):
 
         # attempt to load the page
         # confirm the course is a valid course
-        valid_course = await check_course_is_valid(page, courseID)
+        valid_course = await check_course_is_valid(page, course.id)
         if not valid_course:
             print("Invalid course")
             await browser.close()
@@ -31,15 +40,34 @@ async def start_session_async(courseID):
         print("Valid course, beginning checks")
 
         # Do some initial collection of data
-        # Get all course Modules
-        # Get all course pages
-        # Get all course Assessments
+        # Course Data
+        await get_course_data(page, course)
 
         # Iterate through course pages
 
         # Iterate through assessments
+        print("Assessment Checking:")
+        # for a in course.assessments:
+        #    await get_assessment_data(page, a)
 
         await browser.close()
+
+        print_results(course)
+        generate_report.generate_excel_report(
+            course, str(round(time.time() - start_time, 2))
+        )
+        print("--- %s seconds ---" % (round(time.time() - start_time, 2)))
+
+
+# small utility just to print the results out
+def print_results(course: QA_Data.Course):
+    print("-===== RESULTS =====-")
+    print("Course URL", course.url)
+    print("Course title", course.title)
+    print("Participants:", course.participant_count)
+    print("Pages:", course.page_count)
+    print("Modules:", course.module_count)
+    print("Assessments:", course.assessment_count)
 
 
 async def log_into_canvas(page):

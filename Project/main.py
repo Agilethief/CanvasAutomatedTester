@@ -10,10 +10,14 @@ def main(startID: int, endID: int):
 
     for id in range(startID, endID):
         course = QA_Data.Course(id, "Some course")
-        connect.start_session(id)
+        connect.start_session(course)
 
 
 if __name__ == "__main__":
-    startID = int(input("What is the course index to start from? "))
-    endID = int(input("What is the last ID to check? "))
+    # startID = int(input("What is the course index to start from? "))
+    # endID = int(input("What is the last ID to check? "))
+
+    startID = 704
+    endID = 705
+
     main(startID, endID)
