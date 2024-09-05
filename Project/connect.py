@@ -5,6 +5,7 @@ from Playwright_Checks import (
     check_course_is_valid,
     get_course_data,
     get_assessment_data,
+    start_page_checks,
 )
 import QA_Data
 import time
@@ -44,6 +45,9 @@ async def start_session_async(course: QA_Data.Course):
         await get_course_data(page, course)
 
         # Iterate through course pages
+        print("Page Checking:")
+        for p in course.pages:
+            await start_page_checks(page, p)
 
         # Iterate through assessments
         print("Assessment Checking:")
@@ -68,6 +72,19 @@ def print_results(course: QA_Data.Course):
     print("Pages:", course.page_count)
     print("Modules:", course.module_count)
     print("Assessments:", course.assessment_count)
+
+    for p in course.pages:
+        print("Page:", p.title)
+        print("Word count:", p.word_count)
+        print("Image count:", p.image_count)
+
+    for issue in course.issues:
+        print(
+            f"{issue.issue_type}: ",
+            issue.issue_description,
+            issue.issue_element,
+            issue.issue_link,
+        )
 
 
 async def log_into_canvas(page):

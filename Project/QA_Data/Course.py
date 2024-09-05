@@ -1,6 +1,7 @@
 from .Assessment import Assessment
 from .Module import Module
 from .Page import Page
+from .Issue import Issue
 
 # this script handles getting the top level course data
 # - ID : int
@@ -27,8 +28,9 @@ class Course:
         self.link_count = 0
         self.image_count = 0
         self.modules = []
-        self.pages = []
+        self.pages: list[Page] = []
         self.assessments = []
+        self.issues: list[Issue] = []
 
     def set_title(self, newTitle: str):
         self.title = newTitle
@@ -74,3 +76,7 @@ class Course:
 
     def set_assessments(self, newAssessments: list):
         self.assessments = newAssessments
+
+    def create_issue(self, issue_type, issue_description, issue_element, issue_link):
+        new_issue = Issue(issue_type, issue_description, issue_element, issue_link)
+        self.issues.append(new_issue)

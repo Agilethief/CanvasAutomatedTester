@@ -22,12 +22,20 @@ This will transform the course object that is passed into it.
 
 # Top level, goes through all sub functions to populate the course object
 async def get_course_data(page: Page, course_object: QA_Data.Course):
-
+    # Course
     course_object.set_url(f"{os.getenv('BASE_URL')}/courses/{course_object.id}")
     await get_course_title(page, course_object)
     await get_course_participant_count(page, course_object)
+
+    # Page setup
     await get_course_page_count(page, course_object)
+    page_links = await get_course_page_urls(page, course_object)
+    create_pages_from_links(page_links, course_object)
+
+    # Module setup
     await get_course_module_count(page, course_object)
+
+    # Assessment setup
     await get_course_assessment_count(page, course_object)
     assessment_links = await get_course_assessment_urls(page, course_object)
     create_assessments_from_links(assessment_links, course_object)
@@ -82,6 +90,31 @@ async def get_course_page_count(page: Page, course_object: QA_Data.Course):
 
     course_object.set_page_count(page_count)
     return page_count
+
+
+async def get_course_page_urls(page: Page, course_object: QA_Data.Course):
+    await confirm_on_page(
+        page, f"{os.getenv('BASE_URL')}/courses/{course_object.id}/pages"
+    )
+    page_links = []
+
+    page_group = page.locator(".collectionViewItems")
+    page_items = page_group.locator(".wiki-page-title")
+    links = await page_items.locator("a").element_handles()
+
+    for link in links:
+        href = await link.get_attribute("href")
+        page_links.append(href)
+        # print(href)
+
+    return page_links
+
+
+def create_pages_from_links(links: list[str], course_object: QA_Data.Course):
+    for link in links:
+        newPage = QA_Data.Page(link, course_object)
+
+        course_object.pages.append(newPage)
 
 
 async def get_course_module_count(page: Page, course_object: QA_Data.Course):
