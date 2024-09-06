@@ -77,6 +77,10 @@ class Course:
     def set_assessments(self, newAssessments: list):
         self.assessments = newAssessments
 
-    def create_issue(self, issue_type, issue_description, issue_element, issue_link):
-        new_issue = Issue(issue_type, issue_description, issue_element, issue_link)
+    def create_issue(
+        self, issue_type, issue_description, issue_element, issue_link, issue_page
+    ):
+        new_issue = Issue(
+            issue_type, issue_description, issue_element, issue_link, issue_page
+        )
         self.issues.append(new_issue)

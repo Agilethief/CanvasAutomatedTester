@@ -19,7 +19,7 @@ def start_session(course: QA_Data.Course):
 async def start_session_async(course: QA_Data.Course):
     start_time = time.time()
 
-    print("browser session starting")
+    # print("browser session starting")
     async with async_playwright() as p:
         # initial setup
         browser = await p["chromium"].launch(headless=False)
@@ -38,7 +38,7 @@ async def start_session_async(course: QA_Data.Course):
             await browser.close()
             return
 
-        print("Valid course, beginning checks")
+        # print("Valid course, beginning checks")
 
         # Do some initial collection of data
         # Course Data
@@ -51,12 +51,12 @@ async def start_session_async(course: QA_Data.Course):
 
         # Iterate through assessments
         print("Assessment Checking:")
-        # for a in course.assessments:
-        #    await get_assessment_data(page, a)
+        for a in course.assessments:
+            await get_assessment_data(page, a)
 
         await browser.close()
 
-        print_results(course)
+        # print_results(course)
         generate_report.generate_excel_report(
             course, str(round(time.time() - start_time, 2))
         )
