@@ -17,6 +17,7 @@ def generate_excel_report(course: QA_Data.Course, timeTaken: str = ""):
     generate_course_stats_page(workbook, course, timeTaken)
     generate_issues_page(workbook, course)
     generate_page_details_page(workbook, course)
+    generate_assessment_details_page(workbook, course)
 
     print(f"Report: Created {course.title}")
     workbook.close()
@@ -109,6 +110,56 @@ def generate_page_details_page(workbook, course: QA_Data.Course):
         worksheet.write(f"F{row_offset}", page.word_count)
         worksheet.write(f"G{row_offset}", page.image_count)
         worksheet.write(f"H{row_offset}", page.link_count)
+
+
+def generate_assessment_details_page(workbook, course: QA_Data.Course):
+    print("Report: Generating assessment stats")
+    worksheet = workbook.add_worksheet()
+    worksheet.name = "Assessment Stats"
+
+    worksheet.set_column("A:A", 40)
+    worksheet.set_column("B:B", 20)
+    worksheet.set_column("C:C", 20)
+    worksheet.set_column("D:D", 10)
+    worksheet.set_column("E:E", 10)
+    worksheet.set_column("F:F", 10)
+    worksheet.set_column("G:G", 10)
+    worksheet.set_column("H:H", 10)
+
+    worksheet.write("A1", "Title")
+    worksheet.write("B1", "Assessment Group")
+    worksheet.write("C1", "URL")
+    worksheet.write("D1", "Published")
+    worksheet.write("E1", "Points")
+    worksheet.write("F1", "Build on last attempt")
+    worksheet.write("G1", "Release Date")
+    worksheet.write("H1", "Due Date")
+    worksheet.write("I1", "Mark Release policy")
+    worksheet.write("J1", "Mark Display")
+    worksheet.write("K1", "Grading Scheme")
+    worksheet.write("L1", "Issue count")
+    worksheet.write("M1", "Word count")
+    worksheet.write("N1", "Link count")
+    worksheet.write("O1", "Image count")
+
+    # issue_type, issue_description, issue_element, issue_link
+    for index, aa in enumerate(course.assessments):
+        row_offset = index + 2
+        worksheet.write(f"A{row_offset}", aa.title)
+        worksheet.write(f"B{row_offset}", aa.group)
+        worksheet.write(f"C{row_offset}", aa.url)
+        worksheet.write(f"D{row_offset}", aa.published)
+        worksheet.write(f"E{row_offset}", aa.points)
+        worksheet.write(f"F{row_offset}", aa.build_on_last_attempt)
+        worksheet.write(f"G{row_offset}", aa.release_date)
+        worksheet.write(f"H{row_offset}", aa.due_date)
+        worksheet.write(f"I{row_offset}", aa.mark_release_policy)
+        worksheet.write(f"J{row_offset}", aa.mark_display)
+        worksheet.write(f"K{row_offset}", aa.grading_scheme)
+        worksheet.write(f"L{row_offset}", aa.issue_count)
+        worksheet.write(f"M{row_offset}", aa.word_count)
+        worksheet.write(f"N{row_offset}", aa.link_count)
+        worksheet.write(f"O{row_offset}", aa.image_count)
 
 
 def create_stat(

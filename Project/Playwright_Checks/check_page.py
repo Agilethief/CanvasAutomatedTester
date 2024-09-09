@@ -19,12 +19,12 @@ async def start_page_checks(page: Page, page_object: QA_Data.Page):
 async def get_page_title(page: Page, page_object: QA_Data.Page):
     await confirm_on_page(page, page_object.url)
 
-    is_title_visible = await page.locator(".page-title").is_visible()
+    is_title_visible = await page.locator(".page-title").first.is_visible()
     if not is_title_visible:
         print("Page does not have a title!")
         return
 
-    return await page.locator(".page-title").inner_text()
+    return await page.locator(".page-title").first.inner_text()
 
 
 async def get_page_word_count(page: Page, page_object: QA_Data.Page):
@@ -98,6 +98,9 @@ async def get_page_links(page: Page, page_object: QA_Data.Page):
 
     for link in links:
         href = await link.get_attribute("href")
+        if href is None:
+            continue
+
         title = await link.inner_text()
         internal = "https://wisdomlearning.instructure.com" in href
 
@@ -162,12 +165,12 @@ async def check_page_published(page: Page, page_object: QA_Data.Page):
     is_published_visible = await page.locator(".btn-published").is_visible()
 
     if is_publish_visible:
-        print("Page has a publish button! - Likely unpublished")
+        # print("Page has a publish button! - Likely unpublished")
         return False
 
     if is_published_visible:
-        print("Page does not have a publish button! - Likely published")
+        # print("Page does not have a publish button! - Likely published")
         return True
 
-    print("No publish information found for the page")
+    # print("No publish information found for the page")
     return False

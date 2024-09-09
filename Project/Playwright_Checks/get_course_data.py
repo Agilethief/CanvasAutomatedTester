@@ -1,7 +1,7 @@
 import QA_Data
 from playwright.async_api import async_playwright, Page
 import os, re
-from .simple_checks import confirm_on_page
+from .simple_checks import confirm_on_page, extract_assessment_id_from_URL
 
 # this script handles getting the top level course data
 # - ID : int
@@ -37,8 +37,8 @@ async def get_course_data(page: Page, course_object: QA_Data.Course):
 
     # Assessment setup
     await get_course_assessment_count(page, course_object)
-    assessment_links = await get_course_assessment_urls(page, course_object)
-    create_assessments_from_links(assessment_links, course_object)
+    assessment_data = await get_course_assessment_urls(page, course_object)
+    create_assessments_from_data(assessment_data, course_object)
 
 
 async def get_course_title(page: Page, course_object: QA_Data.Course):
@@ -144,7 +144,7 @@ async def get_course_assessment_urls(page: Page, course_object: QA_Data.Course):
     await confirm_on_page(
         page, f"{os.getenv('BASE_URL')}/courses/{course_object.id}/assignments"
     )
-    assessment_links = []
+    assessment_data = []
 
     assessment_group = page.locator("#ag-list")
     assessment_items = assessment_group.locator(".ig-info")
@@ -152,15 +152,24 @@ async def get_course_assessment_urls(page: Page, course_object: QA_Data.Course):
 
     for link in links:
         href = await link.get_attribute("href")
-        assessment_links.append(href)
+        title = await link.inner_text()
+        # Detect if it is an edit link, and if so remove the edit section so we have a pure link
+        aa_id = extract_assessment_id_from_URL(href)
+        reconstructed_link = (
+            f"{os.getenv('BASE_URL')}/courses/{course_object.id}/assignments/{aa_id}"
+        )
+
+        assessment_data.append(
+            {"link": reconstructed_link, "title": title, "id": aa_id}
+        )
         # print(href)
 
-    return assessment_links
+    return assessment_data
 
 
-def create_assessments_from_links(links: list[str], course_object: QA_Data.Course):
-    for link in links:
-        newAssessment = QA_Data.Assessment(0, "Assessment")
-        newAssessment.url = link
+def create_assessments_from_data(aa_data, course_object: QA_Data.Course):
+    for aa in aa_data:
+        newAssessment = QA_Data.Assessment(aa["id"], aa["title"], course_object)
+        newAssessment.url = aa["link"]
 
         course_object.assessments.append(newAssessment)

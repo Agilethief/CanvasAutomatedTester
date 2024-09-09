@@ -27,3 +27,9 @@ def extract_id_from_URL(url: str):
     pattern = r"courses/(\d*)"
     extracted_id = re.search(pattern, url).group(1)
     return extracted_id
+
+
+def extract_assessment_id_from_URL(url: str):
+    pattern = r"assignments/(\d*)"
+    extracted_id = re.search(pattern, url).group(1)
+    return extracted_id

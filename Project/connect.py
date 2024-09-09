@@ -4,8 +4,9 @@ import os
 from Playwright_Checks import (
     check_course_is_valid,
     get_course_data,
-    get_assessment_data,
+    start_assessment_checks,
     start_page_checks,
+    clear_first_time_popups,
 )
 import QA_Data
 import time
@@ -23,6 +24,10 @@ async def start_session_async(course: QA_Data.Course):
     async with async_playwright() as p:
         # initial setup
         browser = await p["chromium"].launch(headless=False)
+
+        # set cookies
+        # browser_context = await browser.new_context()
+
         page = await browser.new_page()
 
         await log_into_canvas(page)
@@ -38,21 +43,22 @@ async def start_session_async(course: QA_Data.Course):
             await browser.close()
             return
 
-        # print("Valid course, beginning checks")
+        # clear the annoying popup that tries to be a tutorial every time.
+        await clear_first_time_popups(page)
 
         # Do some initial collection of data
         # Course Data
         await get_course_data(page, course)
 
         # Iterate through course pages
-        print("Page Checking:")
-        for p in course.pages:
-            await start_page_checks(page, p)
+        # print("Page Checking:")
+        # for p in course.pages:
+        #    await start_page_checks(page, p)
 
         # Iterate through assessments
         print("Assessment Checking:")
         for a in course.assessments:
-            await get_assessment_data(page, a)
+            await start_assessment_checks(page, a)
 
         await browser.close()
 
