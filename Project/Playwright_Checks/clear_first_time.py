@@ -11,4 +11,4 @@ async def clear_first_time_popups(page: Page):
         "window.localStorage.setItem('canvas-tourpoints-shown-teacher', 'True');"
     )
 
-    page.reload()
+    await page.reload()

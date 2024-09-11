@@ -17,7 +17,7 @@ if __name__ == "__main__":
     # startID = int(input("What is the course index to start from? "))
     # endID = int(input("What is the last ID to check? "))
 
-    startID = 704
-    endID = 705
+    startID = 722
+    endID = 800
 
     main(startID, endID)

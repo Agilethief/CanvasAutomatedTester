@@ -23,7 +23,7 @@ async def start_session_async(course: QA_Data.Course):
     # print("browser session starting")
     async with async_playwright() as p:
         # initial setup
-        browser = await p["chromium"].launch(headless=False)
+        browser = await p["chromium"].launch(headless=True)
 
         # set cookies
         # browser_context = await browser.new_context()
@@ -52,8 +52,8 @@ async def start_session_async(course: QA_Data.Course):
 
         # Iterate through course pages
         # print("Page Checking:")
-        # for p in course.pages:
-        #    await start_page_checks(page, p)
+        for p in course.pages:
+            await start_page_checks(page, p)
 
         # Iterate through assessments
         print("Assessment Checking:")
@@ -103,7 +103,7 @@ async def log_into_canvas(page):
     await page.get_by_role("button", name="Log in").click()
 
     await page.wait_for_timeout(1000)
-    print("Logged in?")
+    print("Logged in")
 
 
 def attempt_to_access_course():

@@ -1,12 +1,12 @@
 class Issue:
     def __init__(
         self,
-        issue_type,
-        issue_description,
-        issue_element,
-        issue_link,
-        page_title,
-        severity="low",
+        issue_type: str,
+        issue_description: str,
+        issue_element: str,
+        issue_link: str,
+        page_title: str,
+        severity: str = "low",
     ):
         self.issue_type = issue_type
         self.issue_description = issue_description

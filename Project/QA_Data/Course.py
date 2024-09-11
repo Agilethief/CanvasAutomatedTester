@@ -29,53 +29,58 @@ class Course:
         self.image_count = 0
         self.modules = []
         self.pages: list[Page] = []
-        self.assessments = []
+        self.assessments: list[Assessment] = []
         self.issues: list[Issue] = []
 
-    def set_title(self, newTitle: str):
-        self.title = newTitle
+    def get_total_word_count(self):
+        word_count = 0
+        for page in self.pages:
+            word_count += page.word_count
 
-    def set_url(self, newURL: str):
-        self.url = newURL
+        for ass in self.assessments:
+            word_count += ass.word_count
 
-    def set_participant_count(self, newCount: int):
-        self.participant_count = newCount
+        return word_count
 
-    def set_page_count(self, newCount: int):
-        self.page_count = newCount
+    def get_total_link_count(self):
+        link_count = 0
+        for page in self.pages:
+            link_count += page.link_count
 
-    def set_module_count(self, newCount: int):
-        self.module_count = newCount
+        for ass in self.assessments:
+            link_count += ass.link_count
 
-    def set_assessment_count(self, newCount: int):
-        self.assessment_count = newCount
+        return link_count
 
-    def set_link_count(self, newCount: int):
-        self.link_count = newCount
+    def get_total_image_count(self):
+        img_count = 0
+        for page in self.pages:
+            img_count += page.image_count
 
-    def set_image_count(self, newCount: int):
-        self.image_count = newCount
+        for ass in self.assessments:
+            img_count += ass.image_count
 
-    def get_page_count(self):  # TODO count these from elsewhere
-        return self.page_count
+        return img_count
 
-    def get_link_count(self):  # TODO count these from elsewhere
-        return self.link_count
+    def get_page_and_assessment_count(self):
+        return len(self.pages) + len(self.assessments)
 
-    def get_image_count(self):  # TODO count these from elsewhere
-        return self.image_count
+    def get_avg_word_count(self):
+        return self.get_avg_over_pages(self.get_total_word_count())
 
-    def get_participant_count(self):  # TODO count these from elsewhere
-        return self.participant_count
+    def get_avg_link_count(self):
+        return self.get_avg_over_pages(self.get_total_link_count())
 
-    def set_modules(self, newModules: list[Module]):
-        self.modules = newModules
+    def get_avg_image_count(self):
+        return self.get_avg_over_pages(self.get_total_image_count())
 
-    def set_pages(self, newPages: list):
-        self.pages = newPages
+    def get_avg_over_pages(self, item_num):
+        if item_num <= 0:
+            return 0
+        if self.get_page_and_assessment_count() <= 0:
+            return
 
-    def set_assessments(self, newAssessments: list):
-        self.assessments = newAssessments
+        return item_num / self.get_page_and_assessment_count()
 
     def create_issue(
         self, issue_type, issue_description, issue_element, issue_link, issue_page

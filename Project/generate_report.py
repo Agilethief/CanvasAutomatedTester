@@ -40,10 +40,16 @@ def generate_course_stats_page(workbook, course: QA_Data.Course, timeTaken: str 
     create_stat(worksheet, "A", "3", "ID", course.id)
     create_stat(worksheet, "A", "4", "URL", course.url)
     create_stat(worksheet, "A", "5", "Participants", course.participant_count)
-    create_stat(worksheet, "A", "6", "Page count", course.page_count)
+    create_stat(worksheet, "A", "6", "Page count", len(course.pages))
     create_stat(worksheet, "A", "7", "Module count", course.module_count)
-    create_stat(worksheet, "A", "8", "Assessment count", course.assessment_count)
+    create_stat(worksheet, "A", "8", "Assessment count", len(course.assessments))
     create_stat(worksheet, "A", "9", "Time taken to generate", timeTaken)
+    create_stat(worksheet, "A", "10", "Total words", course.get_total_word_count())
+    create_stat(worksheet, "A", "11", "Avg words", course.get_avg_word_count())
+    create_stat(worksheet, "A", "12", "Total images", course.get_total_image_count())
+    create_stat(worksheet, "A", "13", "Avg images", course.get_avg_image_count())
+    create_stat(worksheet, "A", "14", "Total links", course.get_total_link_count())
+    create_stat(worksheet, "A", "15", "Avg links", course.get_avg_link_count())
 
 
 def generate_issues_page(workbook, course: QA_Data.Course):
@@ -67,7 +73,7 @@ def generate_issues_page(workbook, course: QA_Data.Course):
     # issue_type, issue_description, issue_element, issue_link
     for index, issue in enumerate(course.issues):
         row_offset = index + 2
-        worksheet.write(f"A{row_offset}", issue.issue_page_title)
+        worksheet.write(f"A{row_offset}", str(issue.issue_page_title))
         worksheet.write(f"B{row_offset}", issue.severity)
         worksheet.write(f"C{row_offset}", issue.issue_type)
         worksheet.write(f"D{row_offset}", issue.issue_description)
@@ -102,7 +108,7 @@ def generate_page_details_page(workbook, course: QA_Data.Course):
     for index, page in enumerate(course.pages):
         row_offset = index + 2
         # print(row_offset)
-        worksheet.write(f"A{row_offset}", page.title)
+        worksheet.write(f"A{row_offset}", str(page.title))
         worksheet.write(f"B{row_offset}", "page.module")
         worksheet.write(f"C{row_offset}", page.url)
         worksheet.write(f"D{row_offset}", page.published)
@@ -141,6 +147,7 @@ def generate_assessment_details_page(workbook, course: QA_Data.Course):
     worksheet.write("M1", "Word count")
     worksheet.write("N1", "Link count")
     worksheet.write("O1", "Image count")
+    worksheet.write("P1", "Question count")
 
     # issue_type, issue_description, issue_element, issue_link
     for index, aa in enumerate(course.assessments):
@@ -160,6 +167,7 @@ def generate_assessment_details_page(workbook, course: QA_Data.Course):
         worksheet.write(f"M{row_offset}", aa.word_count)
         worksheet.write(f"N{row_offset}", aa.link_count)
         worksheet.write(f"O{row_offset}", aa.image_count)
+        worksheet.write(f"P{row_offset}", aa.question_count)
 
 
 def create_stat(

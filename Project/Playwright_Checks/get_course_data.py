@@ -23,7 +23,7 @@ This will transform the course object that is passed into it.
 # Top level, goes through all sub functions to populate the course object
 async def get_course_data(page: Page, course_object: QA_Data.Course):
     # Course
-    course_object.set_url(f"{os.getenv('BASE_URL')}/courses/{course_object.id}")
+    course_object.url = f"{os.getenv('BASE_URL')}/courses/{course_object.id}"
     await get_course_title(page, course_object)
     await get_course_participant_count(page, course_object)
 
@@ -52,7 +52,7 @@ async def get_course_title(page: Page, course_object: QA_Data.Course):
     else:
         title_text = "No title found"
 
-    course_object.set_title(title_text)
+    course_object.title = title_text
     return title_text
 
 
@@ -77,7 +77,7 @@ async def get_course_participant_count(page: Page, course_object: QA_Data.Course
     pattern = r"\d+\d*"
     participant_count = re.findall(pattern, student_text)
 
-    course_object.set_participant_count(participant_count[0])
+    course_object.participant_count = participant_count[0]
     return participant_count
 
 
@@ -88,7 +88,7 @@ async def get_course_page_count(page: Page, course_object: QA_Data.Course):
 
     page_count = await page.locator(".wiki-page-title").count()
 
-    course_object.set_page_count(page_count)
+    course_object.page_count = page_count
     return page_count
 
 
@@ -124,7 +124,7 @@ async def get_course_module_count(page: Page, course_object: QA_Data.Course):
 
     module_count = await page.locator(".context_module").count()
 
-    course_object.set_module_count(module_count)
+    # course_object.set_module_count(module_count)
     return module_count
 
 
@@ -136,7 +136,7 @@ async def get_course_assessment_count(page: Page, course_object: QA_Data.Course)
 
     assessment_count = await page.locator(".assignment").count()
 
-    course_object.set_assessment_count(assessment_count)
+    course_object.assessment_count = assessment_count
     return assessment_count
 
 
